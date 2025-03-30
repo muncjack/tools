@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-MY_NAME="zoom_update_tool.sh"
+MY_NAME="c"
 BASE_DIR="/opt/tools"
 SCRIPT_DIR="${BASE_DIR}/scripts"
 LOCAL_REPO_DIR="${BASE_DIR}/repo/zoom_repo"
@@ -48,8 +48,12 @@ setup_config() {
     then
         echo -e "adding script dir\t" 
         ${BASE_CMD} mkdir -p "${SCRIPT_DIR}"  && echo -e "done" || fail_exit 1
-        ${BASE_CMD} wget -q 
-  fi
+        echo -e "download script\t\t"
+        ${BASE_CMD} wget -q https://github.com/muncjack/tools/blob/main/zoom/zoom_update_tool.sh -O "${SCRIPT_DIR}/${MY_NAME}.new" && echo -e "done" || fail_exit 1
+        mv -v "${SCRIPT_DIR}/${MY_NAME}.new" "${SCRIPT_DIR}/${MY_NAME}"
+        chown -R root:root ${BASE_DIR}
+        chmod 555 ${SCRIPT_DIR}/${MY_NAME} 
+   fi
   package_download
 }
 
