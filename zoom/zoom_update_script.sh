@@ -53,7 +53,7 @@ setup_config() {
 
 script_download() {
   echo -e "download script\t\t"
-  ${BASE_CMD} wget -q -N -P "${SCRIPT_URL}" -O "${SCRIPT_DIR}/.${MY_NAME}.new" && echo -e "done" || fail_exit 1
+  ${BASE_CMD} wget -q -N -P "${SCRIPT_DIR}/.${MY_NAME}.new" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
   if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "sum -r ${SCRIPT_DIR}/.${MY_NAME}.new" ]; then
       # this is for currently runing process to not fail
       ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}.new" "${SCRIPT_DIR}/.${MY_NAME}.old"
