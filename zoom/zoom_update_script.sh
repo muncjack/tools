@@ -60,13 +60,13 @@ script_download() {
   ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
   if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null`" ]; then
       # this is for currently runing process to not fail
-      [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] && ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
+      [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] || ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
       # set flag to void loop on exec reload of new self
       export SCRIPT_RESTART="1"
   fi
   ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
-  exec bash -x "${SCRIPT_DIR}/${MY_NAME}"
+  exec "${SCRIPT_DIR}/${MY_NAME}"
 }
 
 package_download() {
