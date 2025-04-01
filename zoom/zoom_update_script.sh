@@ -69,7 +69,8 @@ script_download() {
       export SCRIPT_RESTART="1"
   fi
   ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
-  exec sudo "${SCRIPT_DIR}/${MY_NAME}"
+  echo "Re run my self to use the new version"
+  exec "${SCRIPT_DIR}/${MY_NAME}"
 }
 
 package_download() {
