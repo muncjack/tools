@@ -73,10 +73,10 @@ script_download() {
 }
 
 package_download() {
-  BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb` 2>/dev/null"
+  BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb 2>/dev/null`"
   echo -en "download/check package download\t"
   ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
-  if [ "${BEFORE_SUM}" != "`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb`" ]; then
+  if [ "${BEFORE_SUM}" != "`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb 2>/dev/null`" ]; then
       cd ${LOCAL_REPO_DIR}
       #exit 0
       echo -en "(re)create Package file\t"
