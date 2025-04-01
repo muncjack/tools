@@ -54,7 +54,9 @@ setup_config() {
       ${BASE_CMD} chown -R root:root ${BASE_DIR}
   fi
   if [ ! -f "${SYSTEMD_APT_PRERUN_FILE}" ]; then
-    echo -en "systemd apt daily rerun\t\t"
+    echo -en "systemd apt daily pre-run conf dir\t\t"
+    mkdir `direname "${SYSTEMD_APT_PRERUN_FILE}"` && echo -e "done" || fail_exit 11
+    echo -en "systemd apt daily pre-run\t\t"
     echo -e "[Service]\nExecStartPre=${SCRIPT_DIR}/${MY_NAME}" | ${BASE_CMD} tee "${SYSTEMD_APT_PRERUN_FILE}" >/dev/null && echo -e "done" || fail_exit 10
     ${BASE_CMD} systemctl daemon-reload
   fi
