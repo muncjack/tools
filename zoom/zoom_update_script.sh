@@ -24,7 +24,7 @@ fail_exit() {
 }
 
 setup_config() {
-  echo -e "Repository directory created \t"
+  echo -en "Repository directory created \t"
   ${BASE_CMD} mkdir -p "$LOCAL_REPO_DIR" && echo -e "done" || fail_exit 1
   
   if [ ! -f "${GPG_KEY_FILE}" ]; then
@@ -44,10 +44,10 @@ setup_config() {
       )| ${BASE_CMD} tee "$REPO_LIST_FILE" > /dev/null && echo -e "done" || fail_exit 3
   fi
   if [ ! -f "${SCRIPT_DIR}/${MY_NAME}" ]; then
-      echo -e "adding script dir\t" 
+      echo -en "adding script dir\t" 
       ${BASE_CMD} mkdir -p "${SCRIPT_DIR}"  && echo -e "done" || fail_exit 1
       
-      echo -e "adding script mirror dir\t" 
+      echo -en "adding script mirror dir\t" 
       ${BASE_CMD} mkdir -p "${SCRIPT_MIRROR_DIR}"  && echo -e "done" || fail_exit 1
       ${BASE_CMD} chown -R root:root ${BASE_DIR}
   fi
@@ -56,7 +56,7 @@ setup_config() {
 }
 
 script_download() {
-  echo -e "download script\t\t"
+  echo -en "download script\t\t"
   ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
   if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME}`" ]; then
       # this is for currently runing process to not fail
@@ -71,7 +71,7 @@ script_download() {
 
 package_download() {
   BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb`"
-  echo -e "download/check package download\t"
+  echo -en "download/check package download\t"
   ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
   if [ "${BEFORE_SUM}" != "`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb`" ]; then
       cd ${LOCAL_REPO_DIR}
