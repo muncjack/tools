@@ -58,7 +58,7 @@ setup_config() {
 script_download() {
   echo -e "download script\t\t"
   ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
-  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/.${MY_NAME}.new/${MY_NAME}`" ]; then
+  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME}`" ]; then
       # this is for currently runing process to not fail
       ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
