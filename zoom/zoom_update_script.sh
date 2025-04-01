@@ -53,11 +53,11 @@ setup_config() {
       ${BASE_CMD} mkdir -p "${SCRIPT_MIRROR_DIR}"  && echo -e "done" || fail_exit 1
       ${BASE_CMD} chown -R root:root ${BASE_DIR}
   fi
-  if [ ! -f "${SYSTEMD_APT_PRERUN_FILE}" ] {
+  if [ ! -f "${SYSTEMD_APT_PRERUN_FILE}" ]; then
     echo -en "systemd apt daily rerun\t\t"
     echo -e "[Service]\nExecStartPre=${SCRIPT_DIR}/${MY_NAME}" | ${BASE_CMD} tee "${SYSTEMD_APT_PRERUN_FILE}" >/dev/null && echo -e "done" || fail_exit 10
     ${BASE_CMD} systemctl daemon-reload
-  }
+  fi
   script_download
   package_download
 }
