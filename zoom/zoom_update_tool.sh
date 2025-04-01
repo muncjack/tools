@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Configuration
-MY_NAME="c"
+MY_NAME="zoom_update_script.sh"
 BASE_DIR="/opt/tools"
 SCRIPT_DIR="${BASE_DIR}/scripts"
-SCRIPT_URL="https://github.com/muncjack/tools/blob/main/zoom/zoom_update_tool.sh"
+SCRIPT_URL="https://github.com/muncjack/tools/blob/main/zoom/${MY_NAME}"
 LOCAL_REPO_DIR="${BASE_DIR}/repo/zoom_repo"
 SCRIPT_DIR="`dirname ${LOCAL_REPO_DIR}`/scripts"
 REPO_LIST_FILE="/etc/apt/sources.list.d/zoom.list"
@@ -54,7 +54,7 @@ setup_config() {
 script_download() {
   echo -e "download script\t\t"
   ${BASE_CMD} wget -q "${SCRIPT_URL}" -O "${SCRIPT_DIR}/.${MY_NAME}.new" && echo -e "done" || fail_exit 1
-  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new`" != "sum -r ${SCRIPT_DIR}/.${MY_NAME}.new" ]; then
+  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "sum -r ${SCRIPT_DIR}/.${MY_NAME}.new" ]; then
       # this is for currently runing process to not fail
       ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}.new" "${SCRIPT_DIR}/.${MY_NAME}.old"
       ${BASE_CMD} cp "${SCRIPT_DIR}/${MY_NAME}.new" "${SCRIPT_DIR}/${MY_NAME}"
