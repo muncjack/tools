@@ -11,6 +11,7 @@ REPO_LIST_FILE="/etc/apt/sources.list.d/zoom.sources"
 GPG_KEY_URL="https://zoom.us/linux/download/pubkey"
 ZOOM_URL="https://zoom.us/client/latest/zoom_amd64.deb"
 GPG_KEY_FILE="/usr/share/keyrings/zoom-archive-keyring.gpg"
+SETUP=0
 
 if [ "${USER}" == "root" ]; then
     BASE_CMD=""
@@ -69,8 +70,10 @@ script_download() {
       export SCRIPT_RESTART="1"
   fi
   ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
-  echo "Re run my self to use the new version"
-  exec "${SCRIPT_DIR}/${MY_NAME}"
+  if [ ${SETUP} -ne 1 ]; then 
+      echo "Re run my self to use the new version"
+      exec "${SCRIPT_DIR}/${MY_NAME}"
+  fi
 }
 
 package_download() {
@@ -86,7 +89,7 @@ package_download() {
       ${BASE_CMD} apt-ftparchive packages . |${BASE_CMD} tee Packages >/dev/null && echo -e "done" || fail_exit 5
       echo -en "(re)create Release file \t"
       ${BASE_CMD} apt-ftparchive release . | ${BASE_CMD} tee Release >/dev/null && echo -e "done" || fail_exit 6
-      #${BASE_CMD} apt update
+      ${BASE_CMD} apt update
   fi 
 }
 
@@ -96,8 +99,9 @@ main() {
     # we have reloaded after update, so just do the package download 
     package_download
   elif [ ! -f  "${LOCAL_REPO_DIR}" ]; then
+    SETUP=1
     setup_config
-    ${BASE_CMD} apt install zoom
+    ${BASE_CMD} apt install zoom -y
   else
     # self update if needed
     script_download 
