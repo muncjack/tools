@@ -64,7 +64,7 @@ script_download() {
       # set flag to void loop on exec reload of new self
       export SCRIPT_RESTART="1"
   fi
-  ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME} "
+  ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
   exec "${SCRIPT_DIR}/${MY_NAME}"
 }
 
