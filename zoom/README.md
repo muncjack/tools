@@ -36,5 +36,5 @@ on the first run it will run the setup function which will
 Open a terminal and run the folowing:
 
 ```bash
-wget https://github.com/muncjack/tools/blob/main/zoom/zoom_update_script.sh | bash 
+wget https://raw.githubusercontent.com/muncjack/tools/refs/heads/main/zoom/zoom_update_script.sh | bash 
 ```
