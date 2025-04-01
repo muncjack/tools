@@ -1,17 +1,25 @@
 
 
+This of all this script is not afileated with zoom.us
 
-This script is a script to manage  the install of zoom by integrating into the
-debian / ubuntu package manager.
+The script manage the install of zoom by integrating into the debian / ubuntu 
+package manager.
 
-This scrip does not build the zoom package it on down loads it from zooms web 
+This script does not build the zoom package it on downloads it from zooms web 
 site and create a local repo so apt can see it and noce if the is a new version
  and update as part of the default OS update. 
 
+### why 
+
+I was pained by the manual process to update zoom, I tried contacting and raised a
+ ticket to suggest having a nice setup with a apt repo. But they started talking about 
+universal installers (zoom does shine good bad ideas and maybe a security problem 
+in the future ..), if zoom.us feel like you need some help setting up a repo
+ feel free to ask :-)  
 
 ### How Does it work? 
 
-on the first run it will run the setup function which will
+On the first run it will run the setup function which will
 
 1. get the current gpg key from zoom.us web site and added it to the gpg key repo
 
@@ -28,7 +36,7 @@ on the first run it will run the setup function which will
 
 2. create the Packages file needed for a depo location 
 
-3. self update is included 
+3. the script will self update (may change in the future)
 
 
 ### Howto install

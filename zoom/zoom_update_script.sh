@@ -12,6 +12,7 @@ GPG_KEY_URL="https://zoom.us/linux/download/pubkey"
 ZOOM_URL="https://zoom.us/client/latest/zoom_amd64.deb"
 GPG_KEY_FILE="/usr/share/keyrings/zoom-archive-keyring.gpg"
 SETUP=0
+SYSTEMD_APT_PRERUN_FILE=/etc/systemd/system/apt-daily.service.d/prerun-zoom.conf
 
 if [ "${USER}" == "root" ]; then
     BASE_CMD=""
@@ -52,6 +53,11 @@ setup_config() {
       ${BASE_CMD} mkdir -p "${SCRIPT_MIRROR_DIR}"  && echo -e "done" || fail_exit 1
       ${BASE_CMD} chown -R root:root ${BASE_DIR}
   fi
+  if [ ! -f "${SYSTEMD_APT_PRERUN_FILE}" ] {
+    echo -en "systemd apt daily rerun\t\t"
+    echo -e "[Service]\nExecStartPre=${SCRIPT_DIR}/${MY_NAME}" | ${BASE_CMD} tee "${SYSTEMD_APT_PRERUN_FILE}" >/dev/null && echo -e "done" || fail_exit 10
+    ${BASE_CMD} systemctl daemon-reload
+  }
   script_download
   package_download
 }
@@ -59,7 +65,7 @@ setup_config() {
 script_download() {
   echo -en "download script\t\t"
   ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
-  SUM_NEW="`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
+  SUM_NEW="`sum -r ${SCRIPT_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
   SUM_CUR="`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
   # check if new version ....
   if [ "${SUM_NEW}" != "${SUM_CUR}" ]; then
