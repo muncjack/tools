@@ -39,7 +39,7 @@ setup_config() {
       DEB_SOURCE_STR="deb [signed-by=${GPG_KEY_FILE}] file://$LOCAL_REPO_DIR ./"
       echo -e "adding repo config to apt\t" 
       #${BASE_CMD} tee "$REPO_LIST_FILE" > /dev/null <(echo "deb file://$LOCAL_REPO_DIR ./") &&
-      echo "${DEB_SOURCE_STR}"| {BASE_CMD} tee "$REPO_LIST_FILE" > /dev/null &&
+      echo "${DEB_SOURCE_STR}"| ${BASE_CMD} tee "$REPO_LIST_FILE" > /dev/null &&
       echo -e "done" || fail_exit 3
   fi
   if [ ! -f "${SCRIPT_DIR}/${MY_NAME}" ]; then
