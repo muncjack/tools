@@ -66,7 +66,7 @@ script_download() {
 }
 
 package_download() {
-  echo -e "doing itial package download\t"
+  echo -e "download/check package download\t"
   ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
   cd ${LOCAL_REPO_DIR}
   #exit 0
