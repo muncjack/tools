@@ -32,7 +32,7 @@ setup_config() {
       echo -e "adding Zoom GPG key\t" 
       #${BASE_CMD} gpg --dearmor -o /usr/share/keyrings/zoom-archive-keyring.gpg <(curl -fsSL "$GPG_KEY_URL") &&
       #${BASE_CMD} gpg --dearmor -o /usr/share/keyrings/zoom-archive-keyring.gpg <(wget -O - "$GPG_KEY_URL") &&
-      wget -q -O - "$GPG_KEY_URLfsdfdfdsf" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
+      wget -q -O - "$GPG_KEY_URL" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
       echo -e "done" || fail_exit 2
   fi
   if [ ! -f "$REPO_LIST_FILE" ]; then
@@ -53,7 +53,7 @@ setup_config() {
 
 script_download() {
   echo -e "download script\t\t"
-  ${BASE_CMD} wget -q "${SCRIPT_URL}" -O "${SCRIPT_DIR}/.${MY_NAME}.new" && echo -e "done" || fail_exit 1
+  ${BASE_CMD} wget -q -N -P "${SCRIPT_URL}" -O "${SCRIPT_DIR}/.${MY_NAME}.new" && echo -e "done" || fail_exit 1
   if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "sum -r ${SCRIPT_DIR}/.${MY_NAME}.new" ]; then
       # this is for currently runing process to not fail
       ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}.new" "${SCRIPT_DIR}/.${MY_NAME}.old"
@@ -67,7 +67,7 @@ script_download() {
 
 package_download() {
   echo -e "doing itial package download\t"
-  ${BASE_CMD} wget -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
+  ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
   cd ${LOCAL_REPO_DIR}
   #exit 0
   echo -e "create package repolist\t"
