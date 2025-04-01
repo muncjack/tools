@@ -28,12 +28,12 @@ setup_config() {
   ${BASE_CMD} mkdir -p "$LOCAL_REPO_DIR" && echo -e "done" || fail_exit 1
   
   if [ ! -f "${GPG_KEY_FILE}" ]; then
-      echo -e "adding Zoom GPG key\t" 
+      echo -en "adding Zoom GPG key\t" 
       wget -q -O - "$GPG_KEY_URL" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
       echo -e "done" || fail_exit 2
   fi
   if [ ! -f "$REPO_LIST_FILE" ]; then
-      echo -e "adding repo config to apt sources\t" 
+      echo -en "adding repo config to apt sources\t" 
       (
         echo "Types: deb"
         echo "URIs: file:$LOCAL_REPO_DIR"
@@ -58,9 +58,9 @@ setup_config() {
 script_download() {
   echo -en "download script\t\t"
   ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
-  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME}`" ]; then
+  if [ "`sum -r ${SCRIPT_DIR}/.${MY_NAME}.new 2>/dev/null`" != "`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null`" ]; then
       # this is for currently runing process to not fail
-      ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
+      [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] && ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
       # set flag to void loop on exec reload of new self
       export SCRIPT_RESTART="1"
@@ -70,16 +70,16 @@ script_download() {
 }
 
 package_download() {
-  BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb`"
+  BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb` 2>/dev/null"
   echo -en "download/check package download\t"
   ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
   if [ "${BEFORE_SUM}" != "`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb`" ]; then
       cd ${LOCAL_REPO_DIR}
       #exit 0
-      echo -e "(re)create Package file\t"
+      echo -en "(re)create Package file\t"
       #${BASE_CMD} apt-ftparchive packages zoom_amd64.deb |${BASE_CMD} tee Packages >/dev/null && echo -e "done" || fail_exit 5
       ${BASE_CMD} apt-ftparchive packages . |${BASE_CMD} tee Packages >/dev/null && echo -e "done" || fail_exit 5
-      echo -e "(re)create Release file \t"
+      echo -en "(re)create Release file \t"
       ${BASE_CMD} apt-ftparchive release . | ${BASE_CMD} tee Release >/dev/null && echo -e "done" || fail_exit 6
       #${BASE_CMD} apt update
   fi 
