@@ -14,7 +14,7 @@ GPG_KEY_FILE="/usr/share/keyrings/zoom-archive-keyring.gpg"
 SETUP=0
 SYSTEMD_APT_PRERUN_FILE=/etc/systemd/system/apt-daily.service.d/prerun-zoom.conf
 
-if [ "${USER}" == "root" ]; then
+if [ "${USER}" == "_apt" ]; then
     BASE_CMD=""
 else
     BASE_CMD="sudo"
@@ -51,7 +51,7 @@ setup_config() {
       
       echo -en "adding script mirror dir\t" 
       ${BASE_CMD} mkdir -p "${SCRIPT_MIRROR_DIR}"  && echo -e "done" || fail_exit 1
-      ${BASE_CMD} chown -R root:root ${BASE_DIR}
+      ${BASE_CMD} chown -R root:_apt ${BASE_DIR}
   fi
   if [ ! -f "${SYSTEMD_APT_PRERUN_FILE}" ]; then
     echo -en "systemd apt daily pre-run conf dir\t\t"
