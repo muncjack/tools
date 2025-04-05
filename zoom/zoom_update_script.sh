@@ -65,10 +65,20 @@ setup_config() {
 }
 
 script_download() {
-  if [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
+  if [ "${0}" == "bash"]; then
+      # install run 
+      echo -en "install script\t\t"
+      ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
+      ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
+      ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
+  elif [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
       echo "New version install"
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
-      exec "${SCRIPT_DIR}/${MY_NAME}"
+      ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
+      if [ ${SETUP} -ne 1 ]; then 
+          echo "run new version"
+          exec "${SCRIPT_DIR}/${MY_NAME}"
+      fi      
   else
       echo -en "download/check script\t\t"
       ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
@@ -78,12 +88,9 @@ script_download() {
       if [ "${SUM_NEW}" != "${SUM_CUR}" ]; then
           # this is for currently runing process to not fail
           [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] || ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
-      fi
-      ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
-      if [ ${SETUP} -ne 1 ]; then 
-          echo "run new version"
           exec bash "${SCRIPT_MIRROR_DIR}/${MY_NAME}"
       fi
+
   fi
 }
 
