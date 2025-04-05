@@ -107,7 +107,7 @@ main() {
     # we have reloaded after update, so just do the package download 
     echo "main() just download"
     package_download
-  elif [ ! -f  "${LOCAL_REPO_DIR}" ]; then
+  elif [ ! -d  "${LOCAL_REPO_DIR}" ]; then
     echo "main() new install"
     SETUP=1
     setup_config
