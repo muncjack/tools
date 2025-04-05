@@ -65,22 +65,25 @@ setup_config() {
 }
 
 script_download() {
-  echo -en "download script\t\t"
-  ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
-  SUM_NEW="`sum -r ${SCRIPT_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
-  SUM_CUR="`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
-  # check if new version ....
-  if [ "${SUM_NEW}" != "${SUM_CUR}" ]; then
-      # this is for currently runing process to not fail
-      [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] || ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
+  if [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
+      echo "New version install"
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
-      # set flag to void loop on exec reload of new self
-      export SCRIPT_RESTART="1"
-  fi
-  ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
-  if [ ${SETUP} -ne 1 ]; then 
-      echo "Re run my self to use the new version"
       exec "${SCRIPT_DIR}/${MY_NAME}"
+  else
+      echo -en "download/check script\t\t"
+      ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
+      SUM_NEW="`sum -r ${SCRIPT_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
+      SUM_CUR="`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
+      # check if new version ....
+      if [ "${SUM_NEW}" != "${SUM_CUR}" ]; then
+          # this is for currently runing process to not fail
+          [ -f ${SCRIPT_MIRROR_DIR}/${MY_NAME} ] || ${BASE_CMD} mv -v "${SCRIPT_DIR}/${MY_NAME}" "${SCRIPT_DIR}/.${MY_NAME}.old"
+      fi
+      ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
+      if [ ${SETUP} -ne 1 ]; then 
+          echo "Re run new version"
+          exec "${SCRIPT_MIRROR_DIR}/${MY_NAME}"
+      fi
   fi
 }
 
@@ -103,9 +106,9 @@ package_download() {
 
 # Main function
 main() {
-  if [ -n "${SCRIPT_RESTART}" ]; then
+  if [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
     # we have reloaded after update, so just do the package download 
-    echo "main() just download"
+    echo "main() New/check version of script"
     package_download
   elif [ ! -d  "${LOCAL_REPO_DIR}" ]; then
     echo "main() new install"
