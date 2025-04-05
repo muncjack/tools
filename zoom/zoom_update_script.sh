@@ -81,8 +81,8 @@ script_download() {
       fi
       ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
       if [ ${SETUP} -ne 1 ]; then 
-          echo "Re run new version"
-          exec "${SCRIPT_MIRROR_DIR}/${MY_NAME}"
+          echo "run new version"
+          exec bash "${SCRIPT_MIRROR_DIR}/${MY_NAME}"
       fi
   fi
 }
