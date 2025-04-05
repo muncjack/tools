@@ -105,12 +105,15 @@ package_download() {
 main() {
   if [ -n "${SCRIPT_RESTART}" ]; then
     # we have reloaded after update, so just do the package download 
+    echo "main() just download"
     package_download
   elif [ ! -f  "${LOCAL_REPO_DIR}" ]; then
+    echo "main() new install"
     SETUP=1
     setup_config
     ${BASE_CMD} apt install zoom -y
   else
+    echo "main() script and download"
     # self update if needed
     script_download 
     package_download
