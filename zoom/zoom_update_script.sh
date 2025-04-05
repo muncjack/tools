@@ -107,7 +107,7 @@ package_download() {
       ${BASE_CMD} apt-ftparchive packages . |${BASE_CMD} tee Packages >/dev/null && echo -e "done" || fail_exit 5
       echo -en "(re)create Release file \t"
       ${BASE_CMD} apt-ftparchive release . | ${BASE_CMD} tee Release >/dev/null && echo -e "done" || fail_exit 6
-      ${BASE_CMD} apt update
+      #${BASE_CMD} apt update
   fi 
 }
 
