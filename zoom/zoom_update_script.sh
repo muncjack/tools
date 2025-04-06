@@ -28,7 +28,8 @@ fail_exit() {
 setup_config() {
   echo -en "Repository directory created \t"
   ${BASE_CMD} mkdir -p "$LOCAL_REPO_DIR" && echo -e "done" || fail_exit 1
-  
+  ${BASE_CMD} setfacl -R -m _apt:wr ${BASE_DIR}
+  ${BASE_CMD} setfacl -R -d -m _apt:wr ${BASE_DIR}
   if [ ! -f "${GPG_KEY_FILE}" ]; then
       echo -en "adding Zoom GPG key\t" 
       wget -q -O - "$GPG_KEY_URL" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
@@ -64,6 +65,12 @@ setup_config() {
   package_download
 }
 
+uninstall(){
+  echo -en "uninstall all the bit's\t\t\t"
+  ${BASE_CMD} rm -rf opt/tools/scripts/zoom_update_script.sh /opt/tools/mirror/zoom/ /etc/systemd/system/apt-daily.service.d/prerun-zoom.conf /opt/tools/repo/zoom_repo/ && echo -e "done" || fail_exit 1
+  exit 0
+}
+
 script_download() {
   if [ "${0}" == "bash"]; then
       # install run 
@@ -71,8 +78,12 @@ script_download() {
       ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
       ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
+      ${BASE_CMD} setfacl -R -m _apt:wr ${BASE_DIR}
+      ${BASE_CMD} setfacl -R -d -m _apt:wr ${BASE_DIR}
   elif [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
       echo "New version install"
+      ${BASE_CMD} setfacl -R -m _apt:wr ${BASE_DIR}
+      ${BASE_CMD} setfacl -R -d -m _apt:wr ${BASE_DIR}
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
       ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
       if [ ${SETUP} -ne 1 ]; then 
@@ -113,7 +124,9 @@ package_download() {
 
 # Main function
 main() {
-  if [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
+  if []; then
+    uninstall()
+  elif [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
     # we have reloaded after update, so just do the package download 
     echo "main() New/check version of script"
     package_download
