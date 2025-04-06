@@ -125,7 +125,7 @@ package_download() {
 # Main function
 main() {
   if []; then
-    uninstall()
+    uninstall
   elif [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
     # we have reloaded after update, so just do the package download 
     echo "main() New/check version of script"
