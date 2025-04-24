@@ -72,7 +72,7 @@ uninstall(){
 }
 
 script_download() {
-  if [ "${0}" == "bash"]; then
+  if [ "${0}" == "bash" ]; then
       # install run 
       echo -en "install script\t\t"
       ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
