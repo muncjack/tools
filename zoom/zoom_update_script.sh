@@ -124,7 +124,7 @@ package_download() {
 
 # Main function
 main() {
-  if []; then
+  if [ "$1" == "uninstall" ]; then
     uninstall
   elif [ "${0}" == "${SCRIPT_MIRROR_DIR}/${MY_NAME}" ]; then
     # we have reloaded after update, so just do the package download 
