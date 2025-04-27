@@ -32,7 +32,7 @@ setup_config() {
   ${BASE_CMD} setfacl -R -d -m _apt:wr ${BASE_DIR}
   if [ ! -f "${GPG_KEY_FILE}" ]; then
       echo -en "adding Zoom GPG key\t" 
-      wget -q -O - "$GPG_KEY_URL" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
+      wget -4 -q -O - "$GPG_KEY_URL" |${BASE_CMD} gpg --dearmor -o ${GPG_KEY_FILE} &&
       echo -e "done" || fail_exit 2
   fi
   if [ ! -f "$REPO_LIST_FILE" ]; then
@@ -75,7 +75,7 @@ script_download() {
   if [ "${0}" == "bash" ]; then
       # install run 
       echo -en "install script\t\t"
-      ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
+      ${BASE_CMD} wget -4 -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
       ${BASE_CMD} cp "${SCRIPT_MIRROR_DIR}/${MY_NAME}" "${SCRIPT_DIR}/${MY_NAME}"
       ${BASE_CMD} chmod 555 "${SCRIPT_DIR}/${MY_NAME}"
       ${BASE_CMD} setfacl -R -m _apt:wr ${BASE_DIR}
@@ -92,7 +92,7 @@ script_download() {
       fi      
   else
       echo -en "download/check script\t\t"
-      ${BASE_CMD} wget -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
+      ${BASE_CMD} wget -4 -q -N -P "${SCRIPT_MIRROR_DIR}" "${SCRIPT_URL}" && echo -e "done" || fail_exit 1
       SUM_NEW="`sum -r ${SCRIPT_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
       SUM_CUR="`sum -r ${SCRIPT_MIRROR_DIR}/${MY_NAME} 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
       # check if new version ....
@@ -108,7 +108,7 @@ script_download() {
 package_download() {
   BEFORE_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
   echo -en "download/check package download\t"
-  ${BASE_CMD} wget -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
+  ${BASE_CMD} wget -4 -q -N -P "$LOCAL_REPO_DIR" "$ZOOM_URL" && echo -e "done" || fail_exit 4
   DOWNLOADED_SUM="`sum -r ${LOCAL_REPO_DIR}/zoom_amd64.deb 2>/dev/null| sed -r -e 's/^([0-9]+\s+[0-9]+).*/\1/'`"
   if [ "${BEFORE_SUM}" != "${DOWNLOADED_SUM}" ]; then
       cd ${LOCAL_REPO_DIR}
