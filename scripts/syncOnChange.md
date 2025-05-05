@@ -14,6 +14,7 @@ Before starting the script you will be python3 inotify on debian/ubuntu install
 If you don't give any params two default params will be used
  * '/tmp'
  * 'echo change to {}'
+
 examples calling rsync on file change:
 
     syncOnChange.py ./ 'rsync -av {} dofus:RaspberryPi/'
